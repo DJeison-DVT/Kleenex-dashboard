@@ -4,6 +4,9 @@ import { authenticatedLoader, protectedLoader } from './Loaders';
 import Dashboard from '../components/Dashboard';
 import Login from '../components/Login';
 import Layout from '../components/Layout';
+import DashboardLayout from '../components/DashboardLayout';
+import Participations from '../components/Participations';
+import Prizes from '../components/Prizes';
 
 const router = createBrowserRouter([
 	{
@@ -28,7 +31,21 @@ const router = createBrowserRouter([
 			{
 				path: 'dashboard',
 				loader: protectedLoader,
-				Component: Dashboard,
+				Component: DashboardLayout,
+				children: [
+					{
+						index: true,
+						Component: Dashboard,
+					},
+					{
+						path: 'participations',
+						Component: Participations,
+					},
+					{
+						path: 'prizes',
+						Component: Prizes,
+					},
+				],
 			},
 		],
 	},
