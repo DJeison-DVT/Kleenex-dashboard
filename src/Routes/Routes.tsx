@@ -3,7 +3,7 @@ import { fakeAuthProvider, loginAction } from '../auth';
 import { authenticatedLoader, protectedLoader } from './Loaders';
 import Dashboard from '../components/Dashboard';
 import Login from '../components/Login';
-import Layout from '../components/fillerComponents';
+import Layout from '../components/Layout';
 
 const router = createBrowserRouter([
 	{
