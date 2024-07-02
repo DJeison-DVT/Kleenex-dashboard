@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 
 function Layout() {
 	return (
-		<div className="relative">
+		<div className="relative w-screen h-screen overflow-hidden">
 			<ul className="p-4 flex fixed top-0 right-0 gap-2">
 				<li>
 					<Link to="/">
