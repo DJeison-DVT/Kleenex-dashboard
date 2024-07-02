@@ -12,7 +12,6 @@ import {
 	ChevronsLeft,
 	ChevronsRight,
 } from 'lucide-react';
-import { ScrollArea } from './scroll-area';
 import { Button } from './button';
 
 interface DataTablePaginationProps<TData> {
