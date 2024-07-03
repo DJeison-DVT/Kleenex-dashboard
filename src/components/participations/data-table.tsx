@@ -17,10 +17,11 @@ import {
 	TableHeader,
 	TableRow,
 } from '../ui/table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { DataTablePagination } from '../ui/pagination';
 import { isSelectedFilterFn } from './filters';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -33,6 +34,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
 
 	const table = useReactTable({
 		data,
@@ -43,6 +46,12 @@ export function DataTable<TData, TValue>({
 		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		initialState: {
+			pagination: {
+				pageSize: Number(searchParams.get('pageSize')) || 10,
+				pageIndex: Number(searchParams.get('page')) - 1 || 0,
+			},
+		},
 		state: {
 			sorting,
 			columnFilters,
@@ -51,6 +60,28 @@ export function DataTable<TData, TValue>({
 			isSelected: isSelectedFilterFn,
 		},
 	});
+
+	useEffect(() => {
+		const { pageIndex, pageSize } = table.getState().pagination;
+		const params = new URLSearchParams(searchParams.toString());
+
+		const currentPage = searchParams.get('page');
+		const currentPageSize = searchParams.get('pageSize');
+
+		if (pageIndex === 0) {
+			params.delete('page');
+		} else if (currentPage !== String(pageIndex + 1)) {
+			params.set('page', String(pageIndex + 1));
+		}
+
+		if (pageSize === 10) {
+			params.delete('pageSize');
+		} else if (currentPageSize !== String(pageSize)) {
+			params.set('pageSize', String(pageSize));
+		}
+
+		navigate({ search: params.toString() }, { replace: true });
+	}, [table.getState().pagination, searchParams, navigate]);
 
 	return (
 		<div className="flex flex-col flex-1 gap-3 p-10 pb-5 max-h-full">
