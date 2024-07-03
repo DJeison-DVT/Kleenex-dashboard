@@ -17,6 +17,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { DataTableColumnHeaderCheckbox } from '../ui/checkbox-menu';
+import { isSelectedFilterFn } from './filters';
 
 interface DataTableColumnHeaderProps<TData, TValue>
 	extends React.HTMLAttributes<HTMLDivElement> {
@@ -42,6 +44,7 @@ export function DataTableColumnHeader<TData, TValue>({
 						size="sm"
 						className="-ml-3 h-8 data-[state=open]:bg-accent"
 					>
+						heald
 						<span>{title}</span>
 						{column.getIsSorted() === 'desc' ? (
 							<ArrowDownIcon className="ml-2 h-4 w-4" />
@@ -71,6 +74,7 @@ export function DataTableColumnHeader<TData, TValue>({
 		</div>
 	);
 }
+
 export const columns: ColumnDef<Participation>[] = [
 	{
 		accessorKey: 'participationNumber',
@@ -119,7 +123,14 @@ export const columns: ColumnDef<Participation>[] = [
 	},
 	{
 		accessorKey: 'status',
-		header: 'Estado',
+		header: ({ column }) => (
+			<DataTableColumnHeaderCheckbox
+				column={column}
+				title="Estado"
+				options={['pending', 'approved', 'rejected']}
+			/>
+		),
+		filterFn: isSelectedFilterFn,
 		cell: ({ row }) => {
 			const status = row.getValue('status');
 

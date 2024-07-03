@@ -10,7 +10,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 101,
 		product: ['Product A', 'Product B'],
 		datetime: new Date('2024-07-01T10:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'gift card',
 	},
 	{
@@ -30,7 +30,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 103,
 		product: ['Product D', 'Product E', 'Product F'],
 		datetime: new Date('2024-07-03T12:00:00Z'),
-		status: 'failed',
+		status: 'rejected',
 		prizeType: null,
 	},
 	{
@@ -40,7 +40,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 104,
 		product: ['Product G'],
 		datetime: new Date('2024-07-04T13:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'gift card',
 	},
 	{
@@ -60,7 +60,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 106,
 		product: ['Product J'],
 		datetime: new Date('2024-07-06T15:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'voucher',
 	},
 	{
@@ -70,7 +70,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 107,
 		product: ['Product K', 'Product L'],
 		datetime: new Date('2024-07-07T16:00:00Z'),
-		status: 'failed',
+		status: 'rejected',
 		prizeType: null,
 	},
 	{
@@ -80,7 +80,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 108,
 		product: ['Product M'],
 		datetime: new Date('2024-07-08T17:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'gift card',
 	},
 	{
@@ -100,7 +100,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 110,
 		product: ['Product P'],
 		datetime: new Date('2024-07-10T19:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'voucher',
 	},
 	{
@@ -110,7 +110,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 111,
 		product: ['Product Q', 'Product R'],
 		datetime: new Date('2024-07-11T20:00:00Z'),
-		status: 'failed',
+		status: 'rejected',
 		prizeType: null,
 	},
 	{
@@ -120,7 +120,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 112,
 		product: ['Product S'],
 		datetime: new Date('2024-07-12T21:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'gift card',
 	},
 	{
@@ -140,7 +140,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 114,
 		product: ['Product V'],
 		datetime: new Date('2024-07-14T23:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'voucher',
 	},
 	{
@@ -150,7 +150,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 115,
 		product: ['Product W', 'Product X'],
 		datetime: new Date('2024-07-15T00:00:00Z'),
-		status: 'failed',
+		status: 'rejected',
 		prizeType: null,
 	},
 	{
@@ -160,7 +160,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 116,
 		product: ['Product Y'],
 		datetime: new Date('2024-07-16T01:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'gift card',
 	},
 	{
@@ -180,7 +180,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 118,
 		product: ['Product AB'],
 		datetime: new Date('2024-07-18T03:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'voucher',
 	},
 	{
@@ -190,7 +190,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 119,
 		product: ['Product AC', 'Product AD'],
 		datetime: new Date('2024-07-19T04:00:00Z'),
-		status: 'failed',
+		status: 'rejected',
 		prizeType: null,
 	},
 	{
@@ -200,7 +200,7 @@ const sampleParticipations: Participation[] = [
 		participationNumber: 120,
 		product: ['Product AE'],
 		datetime: new Date('2024-07-20T05:00:00Z'),
-		status: 'completed',
+		status: 'approved',
 		prizeType: 'gift card',
 	},
 	{
