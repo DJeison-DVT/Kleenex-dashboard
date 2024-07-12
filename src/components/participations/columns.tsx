@@ -1,13 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Participation } from '../../Types/Participation';
 import { Button } from '../ui/button';
-import {
-	ArrowDownIcon,
-	ArrowUpDown,
-	ArrowUpIcon,
-	EyeOff,
-	SortAscIcon,
-} from 'lucide-react';
+import { ArrowDownIcon, ArrowUpIcon, EyeOff, SortAscIcon } from 'lucide-react';
 import { Column } from '@tanstack/react-table';
 import { cn } from '../../lib/utils';
 import {
@@ -17,108 +11,55 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { DataTableColumnHeaderCheckbox } from '../ui/checkbox-menu';
+import { DataTableColumnHeaderCheckbox } from './components/checkbox-menu';
+import { DataTableColumnHeaderSearch } from './components/search-menu';
 import { isSelectedFilterFn } from './filters';
-
-interface DataTableColumnHeaderProps<TData, TValue>
-	extends React.HTMLAttributes<HTMLDivElement> {
-	column: Column<TData, TValue>;
-	title: string;
-}
-
-export function DataTableColumnHeader<TData, TValue>({
-	column,
-	title,
-	className,
-}: DataTableColumnHeaderProps<TData, TValue>) {
-	if (!column.getCanSort()) {
-		return <div className={cn(className)}>{title}</div>;
-	}
-
-	return (
-		<div className={cn('flex items-center space-x-2', className)}>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button
-						variant="ghost"
-						size="sm"
-						className="-ml-3 h-8 data-[state=open]:bg-accent"
-					>
-						heald
-						<span>{title}</span>
-						{column.getIsSorted() === 'desc' ? (
-							<ArrowDownIcon className="ml-2 h-4 w-4" />
-						) : column.getIsSorted() === 'asc' ? (
-							<ArrowUpIcon className="ml-2 h-4 w-4" />
-						) : (
-							<SortAscIcon className="ml-2 h-4 w-4" />
-						)}
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start">
-					<DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-						<ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-						Asc
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-						<ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-						Desc
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-						<EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-						Hide
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</div>
-	);
-}
 
 export const columns: ColumnDef<Participation>[] = [
 	{
-		accessorKey: 'participationNumber',
-		header: 'Num',
-	},
-	{
-		accessorKey: 'phone',
+		accessorKey: 'priorityNumber',
+		id: 'priorityNumber',
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Celular" />
+			<DataTableColumnHeaderSearch column={column} title="Num" />
 		),
 	},
 	{
 		accessorKey: 'datetime',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => {
-						column.toggleSorting(column.getIsSorted() == 'asc');
-					}}
-				>
-					Fecha
-					<ArrowUpDown />
-				</Button>
-			);
-		},
+		header: 'Fecha',
 		cell: ({ row }) => {
 			let date = row.getValue('datetime');
 			if (!(date instanceof Date)) {
 				return null;
 			}
-
 			const padToTwoDigits = (num: number) => num.toString().padStart(2, '0');
-
 			const formattedDate = `
-            ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)} 
-            ${padToTwoDigits(date.getHours())}:${padToTwoDigits(date.getMinutes())}:${padToTwoDigits(date.getSeconds())}
+	        ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)}
+	        ${padToTwoDigits(date.getHours())}:${padToTwoDigits(date.getMinutes())}:${padToTwoDigits(date.getSeconds())}
             `;
-
 			return <div>{formattedDate}</div>;
 		},
 	},
 	{
-		accessorKey: 'prizeType',
+		accessorKey: 'user.phone',
+		id: 'phone',
+		header: ({ column }) => (
+			<DataTableColumnHeaderSearch column={column} title="Celular" />
+		),
+		cell: ({ row }) => {
+			const phone = row.getValue<string>('phone');
+			return phone ? <div>{phone.slice(-10)}</div> : null;
+		},
+	},
+	{
+		header: 'Ticket',
+		accessorKey: 'id',
+		cell: ({ row }) => {
+			const ticketId = row.getValue<string>('id');
+			return ticketId ? <div>{ticketId}</div> : null;
+		},
+	},
+	{
+		accessorKey: 'prize',
 		header: 'Premio',
 	},
 	{
@@ -127,18 +68,19 @@ export const columns: ColumnDef<Participation>[] = [
 			<DataTableColumnHeaderCheckbox
 				column={column}
 				title="Estado"
-				options={['pending', 'approved', 'rejected']}
+				options={[
+					'fullfilled',
+					'approved',
+					'rejected',
+					'incomplete',
+					'complete',
+				]}
 			/>
 		),
 		filterFn: isSelectedFilterFn,
 		cell: ({ row }) => {
-			const status = row.getValue('status');
-
-			if (typeof status !== 'string') {
-				return null;
-			}
-
-			return <div>{status.toUpperCase()}</div>;
+			const status = row.getValue<string>('status');
+			return status ? <div>{status.toUpperCase()}</div> : null;
 		},
 	},
 ];

@@ -1,10 +1,13 @@
+import { User } from './User';
+
 export type Participation = {
 	id: string;
-	phone: string;
-	ticket_url: string;
-	participationNumber: number;
-	product: string[];
+	user: User;
+	ticketUrl: string;
+	ticketAttempts: number;
+	priorityNumber: string;
 	datetime: Date;
 	status: string;
-	prizeType: string | null;
+	flow: string;
+	prize: string;
 };
