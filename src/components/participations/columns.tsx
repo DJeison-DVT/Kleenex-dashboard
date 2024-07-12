@@ -3,6 +3,7 @@ import { Participation } from '../../Types/Participation';
 import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
 import { DataTableColumnHeaderSearch } from '../tables/search-menu';
 import { isSelectedFilterFn } from './filters';
+import TicketDialog from './components/TicketDialog';
 
 export const columns: ColumnDef<Participation>[] = [
 	{
@@ -44,7 +45,7 @@ export const columns: ColumnDef<Participation>[] = [
 		accessorKey: 'id',
 		cell: ({ row }) => {
 			const ticketId = row.getValue<string>('id');
-			return ticketId ? <div>{ticketId}</div> : null;
+			return ticketId ? <TicketDialog id={ticketId}/> : null;
 		},
 	},
 	{
