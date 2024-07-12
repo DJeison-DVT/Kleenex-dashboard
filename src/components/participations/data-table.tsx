@@ -33,9 +33,12 @@ export function DataTable<TData, TValue>({
 	data,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+		{ id: 'phone', value: searchParams.get('phone') || '' },
+		{ id: 'priorityNumber', value: searchParams.get('priorityNumber') || '' },
+	]);
 
 	const table = useReactTable({
 		data,
@@ -62,26 +65,46 @@ export function DataTable<TData, TValue>({
 	});
 
 	useEffect(() => {
-		const { pageIndex, pageSize } = table.getState().pagination;
 		const params = new URLSearchParams(searchParams.toString());
+		const { pageIndex, pageSize } = table.getState().pagination;
 
-		const currentPage = searchParams.get('page');
-		const currentPageSize = searchParams.get('pageSize');
-
+		// Handle pagination parameters
 		if (pageIndex === 0) {
 			params.delete('page');
-		} else if (currentPage !== String(pageIndex + 1)) {
+		} else {
 			params.set('page', String(pageIndex + 1));
 		}
 
 		if (pageSize === 10) {
 			params.delete('pageSize');
-		} else if (currentPageSize !== String(pageSize)) {
+		} else {
 			params.set('pageSize', String(pageSize));
 		}
 
-		navigate({ search: params.toString() }, { replace: true });
-	}, [table.getState().pagination, searchParams, navigate]);
+		// Handle column filters
+		const requiredParams = ['priorityNumber', 'phone'];
+		requiredParams.forEach((param) => {
+			const filter = columnFilters.find((filter) => filter.id === param);
+			if (filter && typeof filter.value === 'string') {
+				params.set(filter.id, filter.value);
+			} else {
+				params.delete(param);
+			}
+		});
+
+		// Handle status filter separately if needed
+		const statusFilter = columnFilters.find((filter) => filter.id === 'status');
+		if (statusFilter && Array.isArray(statusFilter.value)) {
+			params.set('status', statusFilter.value.join(','));
+		} else {
+			params.delete('status');
+		}
+
+		const newUrl = params.toString();
+		console.log('Updated URL Params:', newUrl);
+
+		navigate({ search: newUrl }, { replace: true });
+	}, [table.getState().pagination, columnFilters, searchParams, navigate]);
 
 	return (
 		<div className="flex flex-col flex-1 gap-3 p-10 pb-5 max-h-full">

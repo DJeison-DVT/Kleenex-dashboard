@@ -53,6 +53,7 @@ export const columns: ColumnDef<Participation>[] = [
 	},
 	{
 		accessorKey: 'status',
+        id: 'status',
 		header: ({ column }) => (
 			<DataTableColumnHeaderCheckbox
 				column={column}
