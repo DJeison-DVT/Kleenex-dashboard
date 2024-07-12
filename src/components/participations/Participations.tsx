@@ -8,6 +8,7 @@ import settings from '../../settings';
 
 export default function Participations() {
 	const [participations, setParticipations] = useState<Participation[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const fetchParticipations = async () => {
 		try {
@@ -52,11 +53,12 @@ export default function Participations() {
 
 	useEffect(() => {
 		fetchParticipations();
+		setIsLoading(false);
 	}, []);
 
 	return (
 		<>
-			<DataTable columns={columns} data={participations} />;
+			<DataTable columns={columns} data={participations} isLoading />;
 		</>
 	);
 }

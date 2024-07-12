@@ -18,6 +18,8 @@ import {
 	TableRow,
 } from '../ui/table';
 import { useEffect, useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
+
 import { ScrollArea } from '../ui/scroll-area';
 import { DataTablePagination } from '../tables/pagination';
 import { isSelectedFilterFn } from './filters';
@@ -26,11 +28,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
+	isLoading,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [searchParams] = useSearchParams();
@@ -149,7 +153,15 @@ export function DataTable<TData, TValue>({
 									))
 								) : (
 									<TableRow>
-										<TableCell colSpan={columns.length}>No data</TableCell>
+										<TableCell colSpan={columns.length}>
+											{isLoading ? (
+												<div className="w-full flex justify-center">
+													<LoaderCircle className="animate-spin" />
+												</div>
+											) : (
+												<div className="text-center">No Existen Tickets</div>
+											)}
+										</TableCell>
 									</TableRow>
 								)}
 							</TableBody>
