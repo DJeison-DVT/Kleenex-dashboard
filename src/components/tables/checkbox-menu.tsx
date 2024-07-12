@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,12 +26,14 @@ export function DataTableColumnHeaderCheckbox<TData, TValue>({
 	options,
 }: DataTableColumnHeaderProps<TData, TValue>) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
 
 	if (!column.getCanFilter()) {
 		return <div className={cn(className)}>{title}</div>;
 	}
 	const [selectedOptions, setSelectedOptions] = useState(
-		options.map((option) => option),
+		searchParams.get('status')?.split(',') || ['complete'],
 	);
 
 	const handleOptionChange = (checked: boolean, id: string) => {
@@ -43,6 +46,14 @@ export function DataTableColumnHeaderCheckbox<TData, TValue>({
 
 	useEffect(() => {
 		column.setFilterValue(selectedOptions);
+		const params = new URLSearchParams(searchParams.toString());
+
+		if (JSON.stringify(selectedOptions) === JSON.stringify(['complete'])) {
+			params.delete('status');
+		} else {
+			params.set('status', selectedOptions.join(','));
+		}
+		navigate({ search: params.toString() }, { replace: true });
 	}, [selectedOptions, column]);
 
 	return (
