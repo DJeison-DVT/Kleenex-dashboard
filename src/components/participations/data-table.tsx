@@ -19,7 +19,7 @@ import {
 } from '../ui/table';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
-import { DataTablePagination } from '../ui/pagination';
+import { DataTablePagination } from '../tables/pagination';
 import { isSelectedFilterFn } from './filters';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 

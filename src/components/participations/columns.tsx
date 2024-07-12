@@ -1,18 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Participation } from '../../Types/Participation';
-import { Button } from '../ui/button';
-import { ArrowDownIcon, ArrowUpIcon, EyeOff, SortAscIcon } from 'lucide-react';
-import { Column } from '@tanstack/react-table';
-import { cn } from '../../lib/utils';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { DataTableColumnHeaderCheckbox } from './components/checkbox-menu';
-import { DataTableColumnHeaderSearch } from './components/search-menu';
+import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
+import { DataTableColumnHeaderSearch } from '../tables/search-menu';
 import { isSelectedFilterFn } from './filters';
 
 export const columns: ColumnDef<Participation>[] = [

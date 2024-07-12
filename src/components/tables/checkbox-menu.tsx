@@ -4,11 +4,11 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from '../../ui/dropdown-menu';
-import { Button } from '../../ui/button';
-import { Checkbox } from '../../ui/checkbox';
+} from '../ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
 import { Column } from '@tanstack/react-table';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../lib/utils';
 import { Filter } from 'lucide-react';
 
 interface DataTableColumnHeaderProps<TData, TValue> {
