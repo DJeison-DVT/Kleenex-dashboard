@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -18,8 +18,8 @@ import {
 	FormField,
 	FormItem,
 	FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '../../ui/form';
+import { Input } from '../../ui/input';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -30,14 +30,14 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '../../ui/alert-dialog';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/components/ui/select';
+} from '../../ui/select';
 
 const ticketNumberSchema = z.object({
 	ticketNumber: z.string(),

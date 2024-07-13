@@ -58,7 +58,7 @@ export default function Participations() {
 
 	return (
 		<>
-			<DataTable columns={columns} data={participations} isLoading />;
+			<DataTable columns={columns} data={participations} isLoading={isLoading} />;
 		</>
 	);
 }
