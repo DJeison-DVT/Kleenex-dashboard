@@ -40,6 +40,7 @@ export default function Participations() {
 					status: item.status,
 					flow: item.flow,
 					prize: item.prize,
+                    serial_number: item.serial_number,
 				};
 
 				return result;

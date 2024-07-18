@@ -44,8 +44,10 @@ export const columns: ColumnDef<Participation>[] = [
 		header: 'Ticket',
 		accessorKey: 'id',
 		cell: ({ row }) => {
-			const ticketId = row.getValue<string>('id');
-			return ticketId ? <TicketDialog id={ticketId}/> : null;
+			const participation = row.original;
+			return participation ? (
+				<TicketDialog participation={participation} />
+			) : null;
 		},
 	},
 	{
@@ -54,7 +56,7 @@ export const columns: ColumnDef<Participation>[] = [
 	},
 	{
 		accessorKey: 'status',
-        id: 'status',
+		id: 'status',
 		header: ({ column }) => (
 			<DataTableColumnHeaderCheckbox
 				column={column}
