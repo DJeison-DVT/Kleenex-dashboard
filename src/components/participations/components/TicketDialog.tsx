@@ -105,86 +105,83 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 						<div className="min-w-[500px] max-h-[650px]">
 							<img src={`${settings.bucketURL + participation.ticketUrl}`} />
 						</div>
-						<Form {...form}>
-							<form
-								onSubmit={form.handleSubmit(onSubmit)}
-								className=" flex flex-col justify-between items-start h-fit gap-3 p-5"
-							>
-								<FormField
-									control={form.control}
-									name="ticketNumber"
-									render={({ field }: { field: any }) => (
-										<FormItem>
-											<FormControl>
-												<Input
-													className="min-w-[250px]"
-													placeholder="Num. de Ticket"
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<div className="flex justify-around w-full">
-									<Button variant="secondary" type="submit">
-										Aceptar
-									</Button>
-									<AlertDialog>
-										<AlertDialogTrigger asChild>
-											<div className="flex-col h-full">
-												<Button variant="destructive">Rechazar</Button>
-											</div>
-										</AlertDialogTrigger>
-										<AlertDialogContent className="w-fit">
-											<AlertDialogHeader>
-												<AlertDialogTitle>Motivo de Rechazo</AlertDialogTitle>
-												<AlertDialogDescription>
-													<Select
-														onValueChange={setReason}
-														defaultValue={reason}
-													>
-														<SelectTrigger className="w-[180px]">
-															<SelectValue placeholder="Motivo" />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="No hay Ticket">
-																No hay Ticket
-															</SelectItem>
-															<SelectItem value="No Legible">
-																No Legible
-															</SelectItem>
-															<SelectItem value="Folio Repetido">
-																Folio Repetido
-															</SelectItem>
-															<SelectItem value="Ticket invalido">
-																Ticket invalido
-															</SelectItem>
-														</SelectContent>
-													</Select>
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel>Cancelar</AlertDialogCancel>
-												<AlertDialogAction
-													onClick={() => {
-														console.log(
-															'sending reason:',
-															reason,
-															'for ticket:',
-															participation.id,
-														);
-														setIsOpen(false);
-													}}
-												>
-													Rechazar
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
-									</AlertDialog>
-								</div>
-							</form>
-						</Form>
+						<div className="grid grid-cols-2 grid-rows-2 h-fit min-w-[260px] gap-3 m-5">
+							<Form {...form}>
+								<form
+									onSubmit={form.handleSubmit(onSubmit)}
+									className="contents"
+								>
+									<FormField
+										control={form.control}
+										name="ticketNumber"
+										render={({ field }: { field: any }) => (
+											<FormItem className="col-span-2 h-fit">
+												<FormControl>
+													<Input
+														className="min-w-[250px]"
+														placeholder="Num. de Ticket"
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<div className="flex justify-center">
+										<Button variant="secondary" type="submit">
+											Aceptar
+										</Button>
+									</div>
+								</form>
+							</Form>
+							<AlertDialog>
+								<AlertDialogTrigger asChild>
+									<div className="flex justify-center h-fit">
+										<Button variant="destructive">Rechazar</Button>
+									</div>
+								</AlertDialogTrigger>
+								<AlertDialogContent className="w-fit">
+									<AlertDialogHeader>
+										<AlertDialogTitle>Motivo de Rechazo</AlertDialogTitle>
+										<AlertDialogDescription>
+											<Select onValueChange={setReason} defaultValue={reason}>
+												<SelectTrigger className="w-[180px]">
+													<SelectValue placeholder="Motivo" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="No hay Ticket">
+														No hay Ticket
+													</SelectItem>
+													<SelectItem value="No Legible">No Legible</SelectItem>
+													<SelectItem value="Folio Repetido">
+														Folio Repetido
+													</SelectItem>
+													<SelectItem value="Ticket invalido">
+														Ticket invalido
+													</SelectItem>
+												</SelectContent>
+											</Select>
+										</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel>Cancelar</AlertDialogCancel>
+										<AlertDialogAction
+											onClick={() => {
+												console.log(
+													'sending reason:',
+													reason,
+													'for ticket:',
+													participation.id,
+												);
+												setIsOpen(false);
+											}}
+										>
+											Rechazar
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
+						</div>
 					</div>
 				</DialogDescription>
 			</DialogContent>
