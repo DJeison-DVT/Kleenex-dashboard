@@ -38,6 +38,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '../../ui/select';
+import { useToast } from '../../ui/use-toast';
 
 import settings from '../../../settings';
 import { Participation } from '../../../Types/Participation';
@@ -53,6 +54,8 @@ interface TicketDialogProps {
 export default function TicketDialog({ participation }: TicketDialogProps) {
 	const [reason, setReason] = useState<string>('');
 	const [isOpen, setIsOpen] = useState(false);
+	const [disabled, setDisabled] = useState(false);
+	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof ticketNumberSchema>>({
 		resolver: zodResolver(ticketNumberSchema),
@@ -62,33 +65,34 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 	});
 
 	const onSubmit = async (values: z.infer<typeof ticketNumberSchema>) => {
-		console.log(
-			'sending ticket:',
-			values.ticketNumber,
-			'for ticket:',
-			participation.id,
-		);
+		setDisabled(true);
 		try {
-			// const response = await fetch(
-			//     settings.apiUrl + '/accept/',
-			//     {
-			//         method: 'POST',
-			//         headers: {
-			//             'Content-Type': 'application/json',
-			//         },
-			//         body: JSON.stringify({
-			//             ticket: values.ticketNumber,
-			//             id,
-			//         }),
-			//     },
-			// )
-			// const data = await response.json();
-			// console.log('response:', data);
-			setIsOpen(false);
-			form.reset();
+			const response = await fetch(settings.apiUrl + '/api/dashboard/accept/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					ticket_id: participation.id,
+					serial_number: values.ticketNumber,
+				}),
+			});
+			if (!response.ok) {
+				toast({
+					title: 'Folio repetido',
+					description: response.status,
+				});
+			} else {
+				toast({
+					title: 'Ticket aceptado',
+				});
+				setIsOpen(false);
+				form.reset();
+			}
 		} catch (error) {
 			console.error('Error accepting ticket: ', error);
 		}
+		setDisabled(false);
 	};
 
 	return (
@@ -131,7 +135,11 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 										)}
 									/>
 									<div className="flex justify-center">
-										<Button variant="secondary" type="submit">
+										<Button
+											variant="secondary"
+											type="submit"
+											disabled={disabled}
+										>
 											Aceptar
 										</Button>
 									</div>
