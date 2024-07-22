@@ -104,10 +104,7 @@ export function DataTable<TData, TValue>({
 			params.delete('status');
 		}
 
-		const newUrl = params.toString();
-		console.log('Updated URL Params:', newUrl);
-
-		navigate({ search: newUrl }, { replace: true });
+		navigate({ search: params.toString() }, { replace: true });
 	}, [table.getState().pagination, columnFilters, searchParams, navigate]);
 
 	return (

@@ -102,8 +102,11 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 				</DialogHeader>
 				<DialogDescription asChild>
 					<div className="flex h-80">
-						<div className="min-w-[500px] max-h-[650px]">
-							<img src={`${settings.bucketURL + participation.ticketUrl}`} />
+						<div className="min-w-[500px]">
+							<img
+								className="max-h-[600px]"
+								src={`${settings.bucketURL + participation.ticketUrl}`}
+							/>
 						</div>
 						<div className="grid grid-cols-2 grid-rows-2 h-fit min-w-[260px] gap-3 m-5">
 							<Form {...form}>
