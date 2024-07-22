@@ -67,8 +67,9 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 	const handleReject = async () => {
 		setDisabled(true);
 		try {
-			console.log(settings.apiUrl + '/api/dashboard/reject/');
-			const response = await fetch(settings.apiUrl + '/api/dashboard/reject/', {
+			const url = `${settings.apiUrl}/api/dashboard/reject/`;
+			console.log(url);
+			const response = await fetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -98,8 +99,9 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 	const onSubmit = async (values: z.infer<typeof ticketNumberSchema>) => {
 		setDisabled(true);
 		try {
-			console.log(settings.apiUrl + '/api/dashboard/accept/');
-			const response = await fetch(settings.apiUrl + '/api/dashboard/accept/', {
+			const url = `${settings.apiUrl}/api/dashboard/accept`;
+			console.log(url);
+			const response = await fetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
