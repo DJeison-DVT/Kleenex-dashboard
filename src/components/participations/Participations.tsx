@@ -12,6 +12,7 @@ export default function Participations() {
 
 	const fetchParticipations = async () => {
 		try {
+			console.log(settings.apiUrl + settings.participationsURL);
 			const response = await fetch(
 				settings.apiUrl + settings.participationsURL,
 			);
@@ -40,7 +41,7 @@ export default function Participations() {
 					status: item.status,
 					flow: item.flow,
 					prize: item.prize,
-                    serial_number: item.serial_number,
+					serial_number: item.serial_number,
 				};
 
 				return result;
@@ -59,7 +60,12 @@ export default function Participations() {
 
 	return (
 		<>
-			<DataTable columns={columns} data={participations} isLoading={isLoading} />;
+			<DataTable
+				columns={columns}
+				data={participations}
+				isLoading={isLoading}
+			/>
+			;
 		</>
 	);
 }
