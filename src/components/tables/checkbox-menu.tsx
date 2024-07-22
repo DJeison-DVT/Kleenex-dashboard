@@ -17,6 +17,7 @@ interface DataTableColumnHeaderProps<TData, TValue> {
 	title: string;
 	className?: string;
 	options: string[];
+	displayOptions?: { [key: string]: string };
 }
 
 export function DataTableColumnHeaderCheckbox<TData, TValue>({
@@ -24,6 +25,7 @@ export function DataTableColumnHeaderCheckbox<TData, TValue>({
 	title,
 	className,
 	options,
+	displayOptions,
 }: DataTableColumnHeaderProps<TData, TValue>) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchParams] = useSearchParams();
@@ -83,7 +85,11 @@ export function DataTableColumnHeaderCheckbox<TData, TValue>({
 										handleOptionChange(checked as boolean, option)
 									}
 								/>
-								<span className="ml-2">{option}</span>
+								<span className="ml-2">
+									{displayOptions && displayOptions[option]
+										? displayOptions[option]
+										: option}
+								</span>
 							</div>
 						</DropdownMenuItem>
 					))}

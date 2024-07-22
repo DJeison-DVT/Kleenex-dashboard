@@ -1,9 +1,18 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Participation } from '../../Types/Participation';
+import { Participation, Status } from '../../Types/Participation';
 import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
 import { DataTableColumnHeaderSearch } from '../tables/search-menu';
 import { isSelectedFilterFn } from './filters';
 import TicketDialog from './components/TicketDialog';
+
+const StatusDisplayOptions: Record<Status, string> = {
+	complete: 'Completo',
+	pending: 'Pendiente',
+	incomplete: 'Incompleto',
+	rejected: 'Rechazado',
+	approved: 'Aprobado',
+	fullfilled: 'Entregado',
+};
 
 export const columns: ColumnDef<Participation>[] = [
 	{
@@ -62,18 +71,24 @@ export const columns: ColumnDef<Participation>[] = [
 				column={column}
 				title="Estado"
 				options={[
-					'fullfilled',
-					'approved',
-					'rejected',
-					'incomplete',
 					'complete',
+					'pending',
+					'incomplete',
+					'rejected',
+					'approved',
+					'fullfilled',
 				]}
+				displayOptions={StatusDisplayOptions}
 			/>
 		),
 		filterFn: isSelectedFilterFn,
 		cell: ({ row }) => {
-			const status = row.getValue<string>('status');
-			return status ? <div>{status.toUpperCase()}</div> : null;
+			const status = row.getValue<string>('status').toLowerCase() as Status;
+			return status ? (
+				<div>
+					{StatusDisplayOptions[status] ? StatusDisplayOptions[status] : status}
+				</div>
+			) : null;
 		},
 	},
 ];

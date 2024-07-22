@@ -10,5 +10,13 @@ export type Participation = {
 	status: string;
 	flow: string;
 	prize: string;
-    serial_number: string;
+	serial_number: string;
 };
+
+export type Status =
+	| 'complete'
+	| 'pending'
+	| 'incomplete'
+	| 'rejected'
+	| 'approved'
+	| 'fullfilled';
