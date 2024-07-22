@@ -64,6 +64,36 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 		},
 	});
 
+	const handleReject = async () => {
+		setDisabled(true);
+		try {
+			const response = await fetch(settings.apiUrl + '/api/dashboard/reject/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					ticket_id: participation.id,
+					rejection_reason: reason,
+				}),
+			});
+			if (!response.ok) {
+				toast({
+					title: 'Error al rechazar ticket',
+					description: response.status,
+				});
+			} else {
+				toast({
+					title: 'Ticket rechazado',
+				});
+				setIsOpen(false);
+			}
+		} catch (error) {
+			console.error('Error rejecting ticket: ', error);
+		}
+		setDisabled(false);
+	};
+
 	const onSubmit = async (values: z.infer<typeof ticketNumberSchema>) => {
 		setDisabled(true);
 		try {
@@ -177,15 +207,8 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 									<AlertDialogFooter>
 										<AlertDialogCancel>Cancelar</AlertDialogCancel>
 										<AlertDialogAction
-											onClick={() => {
-												console.log(
-													'sending reason:',
-													reason,
-													'for ticket:',
-													participation.id,
-												);
-												setIsOpen(false);
-											}}
+											onClick={handleReject}
+											disabled={disabled}
 										>
 											Rechazar
 										</AlertDialogAction>
