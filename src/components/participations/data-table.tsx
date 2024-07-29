@@ -36,7 +36,9 @@ export function DataTable<TData, TValue>({
 	data,
 	isLoading,
 }: DataTableProps<TData, TValue>) {
-	const [sorting, setSorting] = useState<SortingState>([]);
+	const [sorting, setSorting] = useState<SortingState>([
+		{ id: 'datetime', desc: true },
+	]);
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
