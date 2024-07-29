@@ -1,5 +1,5 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
-import { fakeAuthProvider, loginAction } from '../auth';
+import { authProvider, loginAction } from '../auth';
 import { authenticatedLoader, protectedLoader } from './Loaders';
 import Dashboard from '../components/Dashboard';
 import Login from '../components/Login';
@@ -13,14 +13,13 @@ const router = createBrowserRouter([
 		id: 'root',
 		path: '/',
 		loader() {
-			// Our root route always provides the user, if logged in
-			return { user: fakeAuthProvider.username };
+			return { user: authProvider.username };
 		},
 		Component: Layout,
 		children: [
 			{
 				index: true,
-				Component: PublicPage,
+				loader: authenticatedLoader,
 			},
 			{
 				path: 'login',
@@ -53,13 +52,10 @@ const router = createBrowserRouter([
 		path: '/logout',
 		async action() {
 			// We signout in a "resource route" that we can hit from a fetcher.Form
-			await fakeAuthProvider.signout();
+			await authProvider.signout();
 			return redirect('/');
 		},
 	},
 ]);
-function PublicPage() {
-	return <h3>Public</h3>;
-}
 
 export default router;

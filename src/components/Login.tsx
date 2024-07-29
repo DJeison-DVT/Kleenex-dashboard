@@ -4,6 +4,7 @@ import {
 	useNavigation,
 	Form,
 } from 'react-router-dom';
+import { Button } from './ui/button';
 
 export default function Login() {
 	let location = useLocation();
@@ -11,7 +12,9 @@ export default function Login() {
 	let from = params.get('from') || '/';
 
 	let navigation = useNavigation();
-	let isLoggingIn = navigation.formData?.get('username') != null;
+	let isLoggingIn =
+		navigation.formData?.get('username') != null &&
+		navigation.formData?.get('password') != null;
 
 	let actionData = useActionData() as { error: string } | undefined;
 
@@ -22,11 +25,14 @@ export default function Login() {
 			<Form method="post" replace>
 				<input type="hidden" name="redirectTo" value={from} />
 				<label>
-					Username: <input name="username" />
-				</label>{' '}
-				<button type="submit" disabled={isLoggingIn}>
+					Usuario: <input name="username" />
+				</label>
+				<label>
+					Contraseña: <input name="password" />
+				</label>
+				<Button type="submit" disabled={isLoggingIn}>
 					{isLoggingIn ? 'Logging in...' : 'Login'}
-				</button>
+				</Button>
 				{actionData && actionData.error ? (
 					<p style={{ color: 'red' }}>{actionData.error}</p>
 				) : null}

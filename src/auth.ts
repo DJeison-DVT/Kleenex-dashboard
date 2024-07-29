@@ -1,34 +1,62 @@
 import { LoaderFunctionArgs, redirect } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import settings from './settings';
 
 interface AuthProvider {
 	isAuthenticated: boolean;
 	username: null | string;
-	signin(username: string): Promise<void>;
+	signin(username: string, password: string): Promise<void>;
 	signout(): Promise<void>;
+	loadToken(): void;
 }
 
-/**
- * This represents some generic auth provider API, like Firebase.
- */
-export const fakeAuthProvider: AuthProvider = {
-	// TODO - change this to false
-	isAuthenticated: true,
-	username: 'diegovt',
-	async signin(username: string) {
-		await new Promise((r) => setTimeout(r, 500)); // fake delay
-		fakeAuthProvider.isAuthenticated = true;
-		fakeAuthProvider.username = username;
+export const authProvider: AuthProvider = {
+	isAuthenticated: false,
+	username: null,
+
+	async signin(username, password) {
+		const response = await fetch(`${settings.apiUrl}/api/auth/token`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: new URLSearchParams({
+				username,
+				password,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error('Invalid login attempt');
+		}
+		const data = await response.json();
+		const token = data.access_token;
+		if (token) {
+			localStorage.setItem(settings.tokenName, token);
+			authProvider.isAuthenticated = true;
+			authProvider.username = username;
+		}
 	},
 	async signout() {
-		await new Promise((r) => setTimeout(r, 500)); // fake delay
-		fakeAuthProvider.isAuthenticated = false;
-		fakeAuthProvider.username = '';
+		localStorage.removeItem(settings.tokenName);
+		authProvider.isAuthenticated = false;
+		authProvider.username = null;
+	},
+	loadToken() {
+		const token = localStorage.getItem(settings.tokenName);
+		if (token) {
+			this.isAuthenticated = true;
+
+			const decodedToken = jwtDecode(token);
+			this.username = decodedToken.sub || null;
+		}
 	},
 };
 
 export async function loginAction({ request }: LoaderFunctionArgs) {
 	let formData = await request.formData();
 	let username = formData.get('username') as string | null;
+	let password = formData.get('password') as string | null;
 
 	if (!username) {
 		return {
@@ -36,8 +64,14 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
 		};
 	}
 
+	if (!password) {
+		return {
+			error: 'You must provide a password to log in',
+		};
+	}
+
 	try {
-		await fakeAuthProvider.signin(username);
+		await authProvider.signin(username, password);
 	} catch (error) {
 		return {
 			error: 'Invalid login attempt',
@@ -47,3 +81,5 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
 	let redirectTo = formData.get('redirectTo') as string | null;
 	return redirect(redirectTo || '/');
 }
+
+authProvider.loadToken();
