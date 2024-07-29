@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { User } from '../../Types/User';
 import { Participation } from '../../Types/Participation';
-import { columns } from './columns';
+import { columns as originalColumns } from './columns';
 import { DataTable } from './data-table';
 import settings from '../../settings';
+import TicketDialog from './components/TicketDialog';
+import { ColumnDef } from '@tanstack/react-table';
 
 export default function Participations() {
 	const [participations, setParticipations] = useState<Participation[]>([]);
@@ -52,6 +54,26 @@ export default function Participations() {
 			console.error('Error fetching participations: ', error);
 		}
 	};
+
+	const ticketColumn: ColumnDef<Participation> = {
+		header: 'Ticket',
+		accessorKey: 'id',
+		cell: ({ row }) => {
+			const participation = row.original;
+			return participation ? (
+				<TicketDialog
+					participation={participation}
+					onTicketSend={fetchParticipations}
+				/>
+			) : null;
+		},
+	};
+
+	const columns = [
+		...originalColumns.slice(0, 3), // Get the first 4 columns
+		ticketColumn, // Insert the new column
+		...originalColumns.slice(3), // Append the rest of the columns
+	];
 
 	useEffect(() => {
 		fetchParticipations();

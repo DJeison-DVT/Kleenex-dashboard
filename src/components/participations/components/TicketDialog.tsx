@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { z } from 'zod';
+import { boolean, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -49,18 +49,32 @@ const ticketNumberSchema = z.object({
 
 interface TicketDialogProps {
 	participation: Participation;
+	onTicketSend: () => Promise<void>;
 }
 
-export default function TicketDialog({ participation }: TicketDialogProps) {
+const RejectButton = ({ disabled }: { disabled: boolean }) => (
+	<div className="flex justify-center h-fit">
+		<Button disabled={disabled} variant="destructive">
+			Rechazar
+		</Button>
+	</div>
+);
+
+export default function TicketDialog({
+	participation,
+	onTicketSend,
+}: TicketDialogProps) {
 	const [reason, setReason] = useState<string>('');
 	const [isOpen, setIsOpen] = useState(false);
-	const [disabled, setDisabled] = useState(false);
+	const [disabled, setDisabled] = useState<boolean>(
+		participation.serial_number !== '',
+	);
 	const { toast } = useToast();
 
 	const form = useForm<z.infer<typeof ticketNumberSchema>>({
 		resolver: zodResolver(ticketNumberSchema),
 		defaultValues: {
-			ticketNumber: '',
+			ticketNumber: participation.serial_number || '',
 		},
 	});
 
@@ -88,6 +102,7 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 				toast({
 					title: 'Ticket rechazado',
 				});
+				await onTicketSend();
 				setIsOpen(false);
 			}
 		} catch (error) {
@@ -120,6 +135,7 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 				toast({
 					title: 'Ticket aceptado',
 				});
+				await onTicketSend();
 				setIsOpen(false);
 				form.reset();
 			}
@@ -179,46 +195,44 @@ export default function TicketDialog({ participation }: TicketDialogProps) {
 									</div>
 								</form>
 							</Form>
-							<AlertDialog>
-								<AlertDialogTrigger asChild>
-									<div className="flex justify-center h-fit">
-										<Button variant="destructive">Rechazar</Button>
-									</div>
-								</AlertDialogTrigger>
-								<AlertDialogContent className="w-fit">
-									<AlertDialogHeader>
-										<AlertDialogTitle>Motivo de Rechazo</AlertDialogTitle>
-										<AlertDialogDescription>
-											<Select onValueChange={setReason} defaultValue={reason}>
-												<SelectTrigger className="w-[180px]">
-													<SelectValue placeholder="Motivo" />
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value="No hay Ticket">
-														No hay Ticket
-													</SelectItem>
-													<SelectItem value="No Legible">No Legible</SelectItem>
-													<SelectItem value="Folio Repetido">
-														Folio Repetido
-													</SelectItem>
-													<SelectItem value="Ticket invalido">
-														Ticket invalido
-													</SelectItem>
-												</SelectContent>
-											</Select>
-										</AlertDialogDescription>
-									</AlertDialogHeader>
-									<AlertDialogFooter>
-										<AlertDialogCancel>Cancelar</AlertDialogCancel>
-										<AlertDialogAction
-											onClick={handleReject}
-											disabled={disabled}
-										>
-											Rechazar
-										</AlertDialogAction>
-									</AlertDialogFooter>
-								</AlertDialogContent>
-							</AlertDialog>
+							{disabled ? (
+								<RejectButton disabled={disabled} />
+							) : (
+								<AlertDialog>
+									<AlertDialogTrigger asChild>
+										<RejectButton disabled={disabled} />
+									</AlertDialogTrigger>
+									<AlertDialogContent className="w-fit">
+										<AlertDialogHeader>
+											<AlertDialogTitle>Motivo de Rechazo</AlertDialogTitle>
+											<AlertDialogDescription>
+												<Select onValueChange={setReason} defaultValue={reason}>
+													<SelectTrigger className="w-[180px]">
+														<SelectValue placeholder="Motivo" />
+													</SelectTrigger>
+													<SelectContent>
+														<SelectItem value="No Legible">
+															No Legible
+														</SelectItem>
+														<SelectItem value="Ticket invalido">
+															Ticket invalido
+														</SelectItem>
+													</SelectContent>
+												</Select>
+											</AlertDialogDescription>
+										</AlertDialogHeader>
+										<AlertDialogFooter>
+											<AlertDialogCancel>Cancelar</AlertDialogCancel>
+											<AlertDialogAction
+												onClick={handleReject}
+												disabled={disabled}
+											>
+												Rechazar
+											</AlertDialogAction>
+										</AlertDialogFooter>
+									</AlertDialogContent>
+								</AlertDialog>
+							)}
 						</div>
 					</div>
 				</DialogDescription>

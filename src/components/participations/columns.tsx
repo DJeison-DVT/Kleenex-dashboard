@@ -3,7 +3,6 @@ import { Participation, Status } from '../../Types/Participation';
 import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
 import { DataTableColumnHeaderSearch } from '../tables/search-menu';
 import { isSelectedFilterFn } from './filters';
-import TicketDialog from './components/TicketDialog';
 
 const StatusDisplayOptions: Record<Status, string> = {
 	complete: 'Completo',
@@ -11,7 +10,7 @@ const StatusDisplayOptions: Record<Status, string> = {
 	incomplete: 'Incompleto',
 	rejected: 'Rechazado',
 	approved: 'Aprobado',
-	fullfilled: 'Entregado',
+	fullfiled: 'Entregado',
 };
 
 export const columns: ColumnDef<Participation>[] = [
@@ -50,16 +49,6 @@ export const columns: ColumnDef<Participation>[] = [
 		},
 	},
 	{
-		header: 'Ticket',
-		accessorKey: 'id',
-		cell: ({ row }) => {
-			const participation = row.original;
-			return participation ? (
-				<TicketDialog participation={participation} />
-			) : null;
-		},
-	},
-	{
 		accessorKey: 'prize',
 		header: 'Premio',
 	},
@@ -76,7 +65,7 @@ export const columns: ColumnDef<Participation>[] = [
 					'incomplete',
 					'rejected',
 					'approved',
-					'fullfilled',
+					'fullfiled',
 				]}
 				displayOptions={StatusDisplayOptions}
 			/>

@@ -19,4 +19,4 @@ export type Status =
 	| 'incomplete'
 	| 'rejected'
 	| 'approved'
-	| 'fullfilled';
+	| 'fullfiled';
