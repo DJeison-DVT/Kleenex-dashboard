@@ -13,8 +13,8 @@ export default function Participations() {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const fetchParticipations = async () => {
+		setIsLoading(true);
 		try {
-			console.log(settings.apiUrl + settings.participationsURL);
 			const response = await fetch(
 				settings.apiUrl + settings.participationsURL,
 			);
@@ -53,6 +53,7 @@ export default function Participations() {
 		} catch (error) {
 			console.error('Error fetching participations: ', error);
 		}
+		setIsLoading(false);
 	};
 
 	const ticketColumn: ColumnDef<Participation> = {
@@ -77,7 +78,6 @@ export default function Participations() {
 
 	useEffect(() => {
 		fetchParticipations();
-		setIsLoading(false);
 	}, []);
 
 	return (
@@ -86,6 +86,7 @@ export default function Participations() {
 				columns={columns}
 				data={participations}
 				isLoading={isLoading}
+				onRefresh={fetchParticipations}
 			/>
 			;
 		</>

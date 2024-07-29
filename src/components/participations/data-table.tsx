@@ -18,23 +18,26 @@ import {
 	TableRow,
 } from '../ui/table';
 import { useEffect, useState } from 'react';
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, RefreshCw } from 'lucide-react';
 
 import { ScrollArea } from '../ui/scroll-area';
 import { DataTablePagination } from '../tables/pagination';
 import { isSelectedFilterFn } from './filters';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Button } from '../ui/button';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	isLoading: boolean;
+	onRefresh: () => Promise<void>;
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
 	isLoading,
+	onRefresh,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([
 		{ id: 'datetime', desc: true },
@@ -168,7 +171,12 @@ export function DataTable<TData, TValue>({
 					</div>
 				</div>
 			</ScrollArea>
-			<DataTablePagination table={table} />
+			<div className="flex justify-between">
+				<Button disabled={isLoading}>
+					<RefreshCw />
+				</Button>
+				<DataTablePagination table={table} />
+			</div>
 		</div>
 	);
 }
