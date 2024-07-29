@@ -19,7 +19,9 @@ const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
+				action: loginAction,
 				loader: authenticatedLoader,
+				Component: Login,
 			},
 			{
 				path: 'login',
@@ -51,7 +53,6 @@ const router = createBrowserRouter([
 	{
 		path: '/logout',
 		async action() {
-			// We signout in a "resource route" that we can hit from a fetcher.Form
 			await authProvider.signout();
 			return redirect('/');
 		},
