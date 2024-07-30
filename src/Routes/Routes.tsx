@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 import DashboardLayout from '../components/DashboardLayout';
 import Participations from '../components/participations/Participations';
 import Prizes from '../components/prizes/Prizes';
-import Users from '../components/Users';
+import Users from '../components/users/Users';
 
 const router = createBrowserRouter([
 	{
