@@ -13,7 +13,7 @@ const router = createBrowserRouter([
 		id: 'root',
 		path: '/',
 		loader() {
-			return { user: authProvider.username };
+			return { user: authProvider.username, role: authProvider.role };
 		},
 		Component: Layout,
 		children: [

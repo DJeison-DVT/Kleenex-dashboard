@@ -39,7 +39,8 @@ export default function Login() {
 					Usuario: <Input className="text-black" name="username" />
 				</label>
 				<label>
-					Contraseña: <Input className="text-black" name="password" />
+					Contraseña:{' '}
+					<Input type="password" className="text-black" name="password" />
 				</label>
 				<Button type="submit" disabled={isLoggingIn}>
 					{isLoggingIn ? 'Logging in...' : 'Login'}

@@ -1,10 +1,16 @@
 import { LoaderFunctionArgs, redirect } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import settings from './settings';
+
+interface CustomJwtPayload extends JwtPayload {
+	sub: string;
+	role: string;
+}
 
 interface AuthProvider {
 	isAuthenticated: boolean;
 	username: null | string;
+	role: null | string;
 	signin(username: string, password: string): Promise<void>;
 	signout(): Promise<void>;
 	loadToken(): void;
@@ -13,6 +19,7 @@ interface AuthProvider {
 export const authProvider: AuthProvider = {
 	isAuthenticated: false,
 	username: null,
+	role: null,
 
 	async signin(username, password) {
 		const response = await fetch(`${settings.apiUrl}/api/auth/token`, {
@@ -31,24 +38,28 @@ export const authProvider: AuthProvider = {
 		}
 		const data = await response.json();
 		const token = data.access_token;
+		const decodedToken = jwtDecode<CustomJwtPayload>(token);
 		if (token) {
 			localStorage.setItem(settings.tokenName, token);
 			authProvider.isAuthenticated = true;
 			authProvider.username = username;
+			authProvider.role = decodedToken.role;
 		}
 	},
 	async signout() {
 		localStorage.removeItem(settings.tokenName);
 		authProvider.isAuthenticated = false;
 		authProvider.username = null;
+		authProvider.role = null;
 	},
 	loadToken() {
 		const token = localStorage.getItem(settings.tokenName);
 		if (token) {
 			this.isAuthenticated = true;
 
-			const decodedToken = jwtDecode(token);
+			const decodedToken = jwtDecode<CustomJwtPayload>(token);
 			this.username = decodedToken.sub || null;
+			this.role = decodedToken.role || null;
 		}
 	},
 };
