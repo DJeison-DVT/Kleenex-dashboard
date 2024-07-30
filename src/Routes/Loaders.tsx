@@ -17,4 +17,10 @@ function protectedLoader({ request }: LoaderFunctionArgs) {
 	return null;
 }
 
-export { authenticatedLoader, protectedLoader };
+function adminLoader() {
+	if (authProvider.isAuthenticated && authProvider.role !== 'admin')
+		return redirect('/dashboard');
+	return null;
+}
+
+export { authenticatedLoader, protectedLoader, adminLoader };
