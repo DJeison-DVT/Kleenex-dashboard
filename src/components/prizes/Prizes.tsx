@@ -11,6 +11,7 @@ export default function Participations() {
 	const { toast } = useToast();
 
 	const fetchPrizes = async () => {
+		setIsLoading(true);
 		try {
 			const url = `${settings.apiUrl}/api/codes/count`;
 			const response = await fetch(url);
@@ -28,11 +29,11 @@ export default function Participations() {
 		} catch (error) {
 			console.error('Error fetching participations: ', error);
 		}
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
 		fetchPrizes();
-		setIsLoading(false);
 	}, []);
 
 	return (
