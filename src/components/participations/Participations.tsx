@@ -88,7 +88,6 @@ export default function Participations() {
 				isLoading={isLoading}
 				onRefresh={fetchParticipations}
 			/>
-			;
 		</>
 	);
 }

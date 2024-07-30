@@ -172,7 +172,7 @@ export function DataTable<TData, TValue>({
 				</div>
 			</ScrollArea>
 			<div className="flex justify-between">
-				<Button disabled={isLoading}>
+				<Button disabled={isLoading} onClick={onRefresh}>
 					<RefreshCw />
 				</Button>
 				<DataTablePagination table={table} />
