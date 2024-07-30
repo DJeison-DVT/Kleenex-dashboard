@@ -52,14 +52,6 @@ interface TicketDialogProps {
 	onTicketSend: () => Promise<void>;
 }
 
-const RejectButton = ({ disabled }: { disabled: boolean }) => (
-	<div className="flex justify-center h-fit">
-		<Button disabled={disabled} variant="destructive">
-			Rechazar
-		</Button>
-	</div>
-);
-
 export default function TicketDialog({
 	participation,
 	onTicketSend,
@@ -67,7 +59,7 @@ export default function TicketDialog({
 	const [reason, setReason] = useState<string>('');
 	const [isOpen, setIsOpen] = useState(false);
 	const [disabled, setDisabled] = useState<boolean>(
-		participation.serial_number !== '',
+		participation.serial_number !== null,
 	);
 	const { toast } = useToast();
 
@@ -81,12 +73,14 @@ export default function TicketDialog({
 	const handleReject = async () => {
 		setDisabled(true);
 		try {
+			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/dashboard/reject/`;
 			console.log(url);
 			const response = await fetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({
 					ticket_id: participation.id,
@@ -114,12 +108,14 @@ export default function TicketDialog({
 	const onSubmit = async (values: z.infer<typeof ticketNumberSchema>) => {
 		setDisabled(true);
 		try {
+			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/dashboard/accept`;
 			console.log(url);
 			const response = await fetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({
 					ticket_id: participation.id,
@@ -127,6 +123,10 @@ export default function TicketDialog({
 				}),
 			});
 			if (!response.ok) {
+				if (response.status == 409) {
+					setReason('Folio Repetido');
+					await handleReject();
+				}
 				toast({
 					title: 'Folio repetido',
 					description: response.status,
@@ -196,11 +196,23 @@ export default function TicketDialog({
 								</form>
 							</Form>
 							{disabled ? (
-								<RejectButton disabled={disabled} />
+								<Button
+									disabled={disabled}
+									variant="destructive"
+									className="w-fit"
+								>
+									Rechazar
+								</Button>
 							) : (
 								<AlertDialog>
 									<AlertDialogTrigger asChild>
-										<RejectButton disabled={disabled} />
+										<Button
+											disabled={disabled}
+											variant="destructive"
+											className="w-fit"
+										>
+											Rechazar
+										</Button>
 									</AlertDialogTrigger>
 									<AlertDialogContent className="w-fit">
 										<AlertDialogHeader>
