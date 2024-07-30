@@ -1,7 +1,6 @@
 export type PrizeInfo = {
-	id: string;
-	name: string;
+	amount: number;
 	available: number;
-	delivered: number;
+	taken: number;
 	total: number;
 };

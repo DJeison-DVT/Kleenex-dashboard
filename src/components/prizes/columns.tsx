@@ -4,10 +4,10 @@ import { PrizeInfo } from '../../Types/Prizes';
 
 export const columns: ColumnDef<PrizeInfo>[] = [
 	{
-		accessorKey: 'name',
-		id: 'name',
+		accessorKey: 'amount',
+		id: 'amount',
 		header: ({ column }) => (
-			<DataTableColumnHeaderSearch column={column} title="Nombre" />
+			<DataTableColumnHeaderSearch column={column} title="Valor del Código" />
 		),
 	},
 	{
@@ -15,7 +15,7 @@ export const columns: ColumnDef<PrizeInfo>[] = [
 		header: 'Disponible',
 	},
 	{
-		accessorKey: 'delivered',
+		accessorKey: 'taken',
 		header: 'Entregados',
 	},
 	{

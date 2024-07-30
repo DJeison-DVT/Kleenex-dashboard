@@ -2,37 +2,29 @@ import { useEffect, useState } from 'react';
 import { DataTable } from './data-table';
 import { columns } from './columns';
 import { PrizeInfo } from '../../Types/Prizes';
+import settings from '../../settings';
+import { useToast } from '../ui/use-toast';
 
 export default function Participations() {
 	const [prizes, setPrizes] = useState<PrizeInfo[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const { toast } = useToast();
 
 	const fetchPrizes = async () => {
 		try {
-			const prizes = [
-				{
-					id: '1',
-					name: '100',
-					available: 10,
-					delivered: 0,
-					total: 10,
-				},
-				{
-					id: '2',
-					name: '200',
-					available: 20,
-					delivered: 0,
-					total: 20,
-				},
-				{
-					id: '3',
-					name: '1000',
-					available: 1,
-					delivered: 0,
-					total: 1,
-				},
-			];
-			setPrizes(prizes);
+			const url = `${settings.apiUrl}/api/codes/count`;
+			const response = await fetch(url);
+
+			if (!response.ok) {
+				toast({
+					title: 'Fallo al conseguir conteo',
+					description: response.status,
+				});
+				return;
+			}
+
+			const data = await response.json();
+			setPrizes(data);
 		} catch (error) {
 			console.error('Error fetching participations: ', error);
 		}
