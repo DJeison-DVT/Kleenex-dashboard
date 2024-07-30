@@ -5,6 +5,7 @@ import { DashboardUser } from '../../Types/User';
 import UserCard from './UserCard';
 import { ScrollArea } from '../ui/scroll-area';
 import UserCreationDialog from './UserCreationDialog';
+import { authorizedFetch } from '../../auth';
 
 export default function Users() {
 	const [users, setUsers] = useState<DashboardUser[]>([]);
@@ -19,14 +20,8 @@ export default function Users() {
 	const fetchUsers = async () => {
 		setIsLoading(true);
 		try {
-			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/dashboard/users`;
-			const response = await fetch(url, {
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const response = await authorizedFetch(url);
 			if (!response.ok) {
 				toast({
 					title: 'Fallo al conseguir usuarios',

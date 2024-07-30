@@ -15,6 +15,7 @@ import { DashboardUser } from '../../Types/User';
 import { useState } from 'react';
 import settings from '../../settings';
 import { useToast } from '../ui/use-toast';
+import { authorizedFetch } from '../../auth';
 
 interface UserCard {
 	index: number;
@@ -35,13 +36,11 @@ export default function UserCard({
 	const handleDelete = async () => {
 		setIsLoading(true);
 		try {
-			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/dashboard/users`;
-			const response = await fetch(url, {
+			const response = await authorizedFetch(url, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({
 					user_id: user.id,

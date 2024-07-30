@@ -116,4 +116,28 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
 	return redirect(redirectTo || '/');
 }
 
+interface FetchOptions extends RequestInit {
+	headers?: Record<string, string>;
+}
+
+export async function authorizedFetch(url: string, options: FetchOptions = {}) {
+	if (!authProvider.checkTokenValidity()) {
+		throw new Error('Invalid token');
+	}
+	const token = localStorage.getItem(settings.tokenName);
+
+	const headers = {
+		...options.headers,
+		Authorization: `Bearer ${token}`,
+	};
+
+	const fetchOptions: RequestInit = {
+		...options,
+		headers,
+	};
+
+	const response = await fetch(url, fetchOptions);
+	return response;
+}
+
 authProvider.loadToken();

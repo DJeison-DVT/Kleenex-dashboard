@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import settings from '../../settings';
 import { useToast } from '../ui/use-toast';
 import { useState } from 'react';
+import { authorizedFetch } from '../../auth';
 
 const formSchema = z.object({
 	username: z.string().min(2, {
@@ -58,13 +59,11 @@ export default function UserCreationDialog({
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
-			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/auth/register`;
-			const response = await fetch(url, {
+			const response = await authorizedFetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify(values),
 			});

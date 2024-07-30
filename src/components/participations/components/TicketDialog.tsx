@@ -42,6 +42,7 @@ import { useToast } from '../../ui/use-toast';
 
 import settings from '../../../settings';
 import { Participation } from '../../../Types/Participation';
+import { authorizedFetch } from '../../../auth';
 
 const ticketNumberSchema = z.object({
 	ticketNumber: z.string(),
@@ -73,14 +74,11 @@ export default function TicketDialog({
 	const handleReject = async () => {
 		setDisabled(true);
 		try {
-			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/dashboard/reject/`;
-			console.log(url);
-			const response = await fetch(url, {
+			const response = await authorizedFetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({
 					ticket_id: participation.id,
@@ -108,14 +106,11 @@ export default function TicketDialog({
 	const onSubmit = async (values: z.infer<typeof ticketNumberSchema>) => {
 		setDisabled(true);
 		try {
-			const accessToken = localStorage.getItem(settings.tokenName);
 			const url = `${settings.apiUrl}/api/dashboard/accept`;
-			console.log(url);
-			const response = await fetch(url, {
+			const response = await authorizedFetch(url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify({
 					ticket_id: participation.id,
