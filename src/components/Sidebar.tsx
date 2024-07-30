@@ -51,7 +51,7 @@ export default function Sidebar() {
 
 	return (
 		<div className="w-fit h-full flex flex-col">
-			<div className="bg-primary w-64 flex justify-center py-2">
+			<div className="bg-primary w-64 flex justify-center py-2 h-20">
 				<img
 					src="/demente-logo.png"
 					alt="demente logo"

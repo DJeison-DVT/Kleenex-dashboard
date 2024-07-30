@@ -14,6 +14,7 @@ interface AuthProvider {
 	signin(username: string, password: string): Promise<void>;
 	signout(): Promise<void>;
 	loadToken(): void;
+	checkTokenValidity(): boolean;
 }
 
 export const authProvider: AuthProvider = {
@@ -54,13 +55,35 @@ export const authProvider: AuthProvider = {
 	},
 	loadToken() {
 		const token = localStorage.getItem(settings.tokenName);
-		if (token) {
-			this.isAuthenticated = true;
-
+		if (token && this.checkTokenValidity()) {
 			const decodedToken = jwtDecode<CustomJwtPayload>(token);
+			this.isAuthenticated = true;
 			this.username = decodedToken.sub || null;
 			this.role = decodedToken.role || null;
 		}
+	},
+	checkTokenValidity() {
+		const token = localStorage.getItem(settings.tokenName);
+		if (token) {
+			try {
+				const decodedToken = jwtDecode<CustomJwtPayload>(token);
+				const currentTime = Math.floor(Date.now() / 1000);
+
+				if (decodedToken.exp && decodedToken.exp < currentTime) {
+					this.signout();
+					return false;
+				}
+
+				return true;
+			} catch (error) {
+				console.error('Invalid token:', error);
+				this.signout();
+				return false;
+			}
+		}
+
+		this.signout();
+		return false;
 	},
 };
 

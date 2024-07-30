@@ -3,17 +3,23 @@ import settings from '../../settings';
 import { useToast } from '../ui/use-toast';
 import { DashboardUser } from '../../Types/User';
 import UserCard from './UserCard';
+import { ScrollArea } from '../ui/scroll-area';
+import UserCreationDialog from './UserCreationDialog';
 
 export default function Users() {
 	const [users, setUsers] = useState<DashboardUser[]>([]);
+	const [selectedUser, setSelectedUser] = useState<DashboardUser>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { toast } = useToast();
+
+	const changeUser = (idx: number) => {
+		setSelectedUser(users[idx]);
+	};
 
 	const fetchUsers = async () => {
 		setIsLoading(true);
 		try {
 			const accessToken = localStorage.getItem(settings.tokenName);
-			console.log(accessToken);
 			const url = `${settings.apiUrl}/api/dashboard/users`;
 			const response = await fetch(url, {
 				method: 'GET',
@@ -30,7 +36,24 @@ export default function Users() {
 			}
 
 			const data = await response.json();
-			setUsers(data);
+			const transformedData = data.map((user: { _id: any }) => ({
+				...user,
+				id: user._id,
+				_id: undefined,
+			})) as DashboardUser[];
+
+			const sortedUsers = transformedData.sort((a, b) => {
+				// Admins first
+				if (a.role === 'admin' && b.role !== 'admin') return -1;
+				if (a.role !== 'admin' && b.role === 'admin') return 1;
+
+				// If both are admins or both are non-admins, sort by username
+				if (a.username < b.username) return -1;
+				if (a.username > b.username) return 1;
+
+				return 0;
+			});
+			setUsers(sortedUsers);
 		} catch (error) {
 			console.error('Error fetching users: ', error);
 		}
@@ -41,10 +64,35 @@ export default function Users() {
 		fetchUsers();
 	}, []);
 	return (
-		<div>
-			{users.map((user) => (
-				<UserCard user={user} />
-			))}
+		<div className="flex flex-1 flex-col max-h-screen ">
+			<div className="text-3xl h-20 flex items-center px-8">
+				Usuarios Registrados
+			</div>
+			<div className="flex flex-1 overflow-hidden p-4">
+				<div className="border-2 border-dark/40 bg-primary/90 items-center flex flex-col min-w-96 rounded-2xl">
+					<div className="p-4 flex w-full">
+						<UserCreationDialog onUserCreation={fetchUsers} />
+					</div>
+					<ScrollArea className="w-full h-full">
+						<div className="">
+							{users.map((user, idx) => (
+								<div
+									key={user.id}
+									className={`w-full hover:bg-dark/20 hover:cursor-pointer  ${selectedUser?.id == users[idx].id && 'bg-dark/10'}`}
+								>
+									<UserCard
+										index={idx}
+										user={user}
+										onBodyClick={changeUser}
+										onUserDeletion={fetchUsers}
+									/>
+								</div>
+							))}
+						</div>
+					</ScrollArea>
+				</div>
+				<div className="flex flex-col flex-1 items-center "></div>
+			</div>
 		</div>
 	);
 }
