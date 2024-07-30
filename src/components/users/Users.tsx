@@ -71,7 +71,10 @@ export default function Users() {
 			<div className="flex flex-1 overflow-hidden p-4">
 				<div className="border-2 border-dark/40 bg-primary/90 items-center flex flex-col min-w-96 rounded-2xl">
 					<div className="p-4 flex w-full">
-						<UserCreationDialog onUserCreation={fetchUsers} />
+						<UserCreationDialog
+							onUserCreation={fetchUsers}
+							isLoading={isLoading}
+						/>
 					</div>
 					<ScrollArea className="w-full h-full">
 						<div className="">

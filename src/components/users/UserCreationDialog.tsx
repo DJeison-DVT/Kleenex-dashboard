@@ -37,10 +37,12 @@ const formSchema = z.object({
 
 interface UserCreationDialogProps {
 	onUserCreation: () => Promise<void>;
+	isLoading: boolean;
 }
 
 export default function UserCreationDialog({
 	onUserCreation,
+	isLoading,
 }: UserCreationDialogProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const { toast } = useToast();
@@ -147,7 +149,9 @@ export default function UserCreationDialog({
 							)}
 						/>
 						<DialogFooter>
-							<Button type="submit">Generar Usuario</Button>
+							<Button type="submit" disabled={isLoading}>
+								Generar Usuario
+							</Button>
 						</DialogFooter>
 					</form>
 				</Form>
