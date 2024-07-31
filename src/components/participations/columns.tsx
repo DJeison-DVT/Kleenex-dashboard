@@ -3,6 +3,7 @@ import { Participation, Status } from '../../Types/Participation';
 import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
 import { DataTableColumnHeaderSearch } from '../tables/search-menu';
 import { isSelectedFilterFn } from './filters';
+import MessageHistory from './components/MessageHistory';
 
 const StatusDisplayOptions: Record<Status, string> = {
 	complete: 'Completo',
@@ -38,14 +39,15 @@ export const columns: ColumnDef<Participation>[] = [
 		},
 	},
 	{
-		accessorKey: 'user.phone',
 		id: 'phone',
 		header: ({ column }) => (
 			<DataTableColumnHeaderSearch column={column} title="Celular" />
 		),
 		cell: ({ row }) => {
-			const phone = row.getValue<string>('phone');
-			return phone ? <div>{phone.slice(-10)}</div> : null;
+			const participation = row.original;
+			return participation ? (
+				<MessageHistory participation={participation} />
+			) : null;
 		},
 	},
 	{
