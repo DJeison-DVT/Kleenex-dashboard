@@ -1,13 +1,14 @@
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import { LoaderCircle } from 'lucide-react';
+
 import {
 	Sheet,
 	SheetContent,
-	SheetDescription,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
 } from '../../ui/sheet';
-import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-
+import { useToast } from '../../ui/use-toast';
 import { Participation } from '../../../Types/Participation';
 import {
 	MainContainer,
@@ -15,14 +16,11 @@ import {
 	MessageList,
 	Message,
 	ConversationHeader,
-	MessageSeparator,
 } from '@chatscope/chat-ui-kit-react';
 import { authorizedFetch } from '../../../auth';
 import settings from '../../../settings';
-import { useToast } from '../../ui/use-toast';
 import { useEffect, useState } from 'react';
 import { ChatMessage } from '../../../Types/Message';
-import { LoaderCircle, User } from 'lucide-react';
 
 interface MessageHistoryProps {
 	participation: Participation;
@@ -76,37 +74,59 @@ export default function MessageHistory({ participation }: MessageHistoryProps) {
 						Historial de conversacion
 					</SheetTitle>
 				</SheetHeader>
-				<div style={{ position: 'relative' }} className="h-[90%]">
-					<MainContainer>
-						<ChatContainer>
-							<MessageList>
-								{messages.map((message, index) => {
-									if (message.text)
-										return (
-											<Message
-												key={index}
-												model={{
-													message: message.text,
-													sentTime: new Date(message.datetime).toLocaleString(),
-													sender: 'Joe',
-													direction: 'incoming',
-													position: 'single',
-												}}
-											>
-												<Message.Header
-													sender={
-														message.from_ === participation.user.phone
-															? participation.user.name
-															: ''
-													}
-													sentTime={new Date(message.datetime).toLocaleString()}
+				<div style={{ position: 'relative' }} className="h-[95%]">
+					{isLoading ? (
+						<div className="w-full flex justify-center h-full items-center">
+							<LoaderCircle className="animate-spin" />
+						</div>
+					) : (
+						<MainContainer>
+							<ChatContainer>
+								<ConversationHeader>
+									<ConversationHeader.Content
+										userName={participation.user.name}
+									/>
+								</ConversationHeader>
+
+								<MessageList>
+									{messages.reverse().map((message, index) => (
+										<Message
+											key={index}
+											model={{
+												message: message.text || '',
+												sentTime: new Date(message.datetime).toLocaleString(),
+												sender:
+													message.from_ === participation.user.phone
+														? participation.user.phone
+														: 'system',
+												direction:
+													message.from_ === participation.user.phone
+														? 'incoming'
+														: 'outgoing',
+												position: 'single',
+											}}
+										>
+											<Message.Header
+												sender={
+													message.from_ === participation.user.phone
+														? participation.user.name
+														: ''
+												}
+												sentTime={new Date(message.datetime).toLocaleString()}
+											/>
+											{message.photo_url && (
+												<Message.ImageContent
+													src={message.photo_url}
+													alt="Akane avatar"
+													height={200}
 												/>
-											</Message>
-										);
-								})}
-							</MessageList>
-						</ChatContainer>
-					</MainContainer>
+											)}
+										</Message>
+									))}
+								</MessageList>
+							</ChatContainer>
+						</MainContainer>
+					)}
 				</div>
 			</SheetContent>
 		</Sheet>
