@@ -1,4 +1,4 @@
-export type Message = {
+export type ChatMessage = {
 	message_sid: string;
 	from_: string;
 	to: string;
