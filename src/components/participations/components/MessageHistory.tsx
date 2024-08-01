@@ -50,7 +50,7 @@ export default function MessageHistory({ participation }: MessageHistoryProps) {
 			}
 
 			const data = await response.json();
-			setMessages(data);
+			setMessages(data.reverse());
 		} catch (error) {
 			console.error('Error fetching users: ', error);
 		}
@@ -89,7 +89,7 @@ export default function MessageHistory({ participation }: MessageHistoryProps) {
 								</ConversationHeader>
 
 								<MessageList>
-									{messages.reverse().map((message, index) => (
+									{messages.map((message, index) => (
 										<Message
 											key={index}
 											model={{
