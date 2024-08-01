@@ -74,7 +74,7 @@ export default function TicketDialog({
 	const handleReject = async () => {
 		setDisabled(true);
 		try {
-			const url = `${settings.apiUrl}/api/dashboard/reject/`;
+			const url = `${settings.apiUrl}/api/dashboard/reject`;
 			const response = await authorizedFetch(url, {
 				method: 'POST',
 				headers: {
