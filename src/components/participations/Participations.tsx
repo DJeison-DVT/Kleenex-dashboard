@@ -7,6 +7,7 @@ import { DataTable } from './data-table';
 import settings from '../../settings';
 import TicketDialog from './components/TicketDialog';
 import { ColumnDef } from '@tanstack/react-table';
+import { authorizedFetch } from '../../auth';
 
 export default function Participations() {
 	const [participations, setParticipations] = useState<Participation[]>([]);
@@ -15,7 +16,7 @@ export default function Participations() {
 	const fetchParticipations = async () => {
 		setIsLoading(true);
 		try {
-			const response = await fetch(
+			const response = await authorizedFetch(
 				settings.apiUrl + settings.participationsURL,
 			);
 			const data = await response.json();

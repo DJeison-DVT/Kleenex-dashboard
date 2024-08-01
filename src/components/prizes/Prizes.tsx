@@ -4,6 +4,7 @@ import { columns } from './columns';
 import { PrizeInfo } from '../../Types/Prizes';
 import settings from '../../settings';
 import { useToast } from '../ui/use-toast';
+import { authorizedFetch } from '../../auth';
 
 export default function Participations() {
 	const [prizes, setPrizes] = useState<PrizeInfo[]>([]);
@@ -14,7 +15,7 @@ export default function Participations() {
 		setIsLoading(true);
 		try {
 			const url = `${settings.apiUrl}/api/codes/count`;
-			const response = await fetch(url);
+			const response = await authorizedFetch(url);
 
 			if (!response.ok) {
 				toast({
