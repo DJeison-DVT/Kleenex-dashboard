@@ -39,7 +39,7 @@ export default function Participations() {
 					user: userObject,
 					ticketUrl: item.ticket_url,
 					ticketAttempts: item.ticket_attempts,
-					datetime: new Date(item.datetime),
+					datetime: new Date(item.datetime + 'Z'),
 					priorityNumber: String(item.priority_number),
 					status: item.status,
 					flow: item.flow,
