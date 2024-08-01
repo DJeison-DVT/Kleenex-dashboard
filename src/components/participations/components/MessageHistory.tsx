@@ -39,7 +39,7 @@ export default function MessageHistory({ participation }: MessageHistoryProps) {
 
 		setIsLoading(true);
 		try {
-			const url = `${settings.apiUrl}/api/messages?id=${participation.user.id}`;
+			const url = `${settings.apiUrl}api/messages/history?id=${participation.user.id}`;
 			const response = await authorizedFetch(url);
 			if (!response.ok) {
 				toast({
