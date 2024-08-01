@@ -62,7 +62,7 @@ export default function Participations() {
 		accessorKey: 'id',
 		cell: ({ row }) => {
 			const participation = row.original;
-			return participation ? (
+			return participation.ticketUrl ? (
 				<TicketDialog
 					participation={participation}
 					onTicketSend={fetchParticipations}

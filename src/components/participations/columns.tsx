@@ -21,6 +21,10 @@ export const columns: ColumnDef<Participation>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeaderSearch column={column} title="Num" />
 		),
+		cell: ({ row }) => {
+			const priorityNumber = row.getValue<number>('priorityNumber');
+			return <div>{priorityNumber > 0 ? priorityNumber : ''}</div>;
+		},
 	},
 	{
 		accessorKey: 'datetime',
