@@ -9,6 +9,15 @@ ENV VITE_REACT_APP_API_URL=$VITE_REACT_APP_API_URL
 ENV VITE_REACT_APP_TOKEN_NAME=$VITE_REACT_APP_TOKEN_NAME
 ENV VITE_REACT_APP_BUCKET_URL=$VITE_REACT_APP_BUCKET_URL
 
+# Install dependencies including tzdata
+RUN apt-get update && apt-get install -y \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the timezone environment variable
+ENV TZ=America/Mexico_City
+RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
+
 
 COPY package.json package-lock.json ./
 RUN npm install
