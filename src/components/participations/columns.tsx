@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Participation, Status } from '../../Types/Participation';
 import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
 import { DataTableColumnHeaderSearch } from '../tables/search-menu';
-import { isSelectedFilterFn } from './filters';
+import { isPhoneFilterFn, isSelectedFilterFn } from './filters';
 import MessageHistory from './components/MessageHistory';
 
 const StatusDisplayOptions: Record<Status, string> = {
@@ -43,10 +43,12 @@ export const columns: ColumnDef<Participation>[] = [
 		},
 	},
 	{
-		id: 'phone',
+		accessorKey: 'user.phone',
+		id: 'user.phone',
 		header: ({ column }) => (
 			<DataTableColumnHeaderSearch column={column} title="Celular" />
 		),
+		filterFn: isPhoneFilterFn,
 		cell: ({ row }) => {
 			const participation = row.original;
 			return participation ? (

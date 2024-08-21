@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-		{ id: 'phone', value: searchParams.get('phone') || '' },
+		{ id: 'user.phone', value: searchParams.get('user.phone') || '' },
 		{ id: 'priorityNumber', value: searchParams.get('priorityNumber') || '' },
 	]);
 
@@ -109,6 +109,7 @@ export function DataTable<TData, TValue>({
 			params.delete('status');
 		}
 
+		console.log('filter', columnFilters);
 		navigate({ search: params.toString() }, { replace: true });
 	}, [table.getState().pagination, columnFilters, searchParams, navigate]);
 
