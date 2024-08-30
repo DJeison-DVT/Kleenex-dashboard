@@ -4,6 +4,19 @@ import { DataTableColumnHeaderCheckbox } from '../tables/checkbox-menu';
 import { DataTableColumnHeaderSearch } from '../tables/search-menu';
 import { isPhoneFilterFn, isSelectedFilterFn } from './filters';
 import MessageHistory from './components/MessageHistory';
+import { Minus, Plus } from 'lucide-react';
+
+interface expandButtonProps {
+	children?: React.ReactNode;
+}
+
+const ExpandButton = ({ children }: expandButtonProps) => {
+	return (
+		<div className="w-fit h-fit border-2 border-black rounded-sm">
+			{children}
+		</div>
+	);
+};
 
 const StatusDisplayOptions: Record<Status, string> = {
 	complete: 'Completo',
@@ -15,6 +28,32 @@ const StatusDisplayOptions: Record<Status, string> = {
 };
 
 export const columns: ColumnDef<Participation>[] = [
+	{
+		id: 'more',
+		header: () => null,
+		cell: ({ row }) => {
+			return (
+				row.getCanExpand() && (
+					<button
+						{...{
+							onClick: row.getToggleExpandedHandler(),
+							style: { cursor: 'pointer' },
+						}}
+					>
+						{row.getIsExpanded() ? (
+							<ExpandButton>
+								<Minus size={16} />
+							</ExpandButton>
+						) : (
+							<ExpandButton>
+								<Plus size={16} />
+							</ExpandButton>
+						)}
+					</button>
+				)
+			);
+		},
+	},
 	{
 		accessorKey: 'priorityNumber',
 		id: 'priorityNumber',

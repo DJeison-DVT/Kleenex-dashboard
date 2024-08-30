@@ -6,7 +6,7 @@ import { columns as originalColumns } from './columns';
 import { DataTable } from './data-table';
 import settings from '../../settings';
 import TicketDialog from './components/TicketDialog';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { authorizedFetch } from '../../auth';
 
 export default function Participations() {
@@ -81,6 +81,30 @@ export default function Participations() {
 		fetchParticipations();
 	}, []);
 
+	const renderSubComponent = ({ row }: { row: Row<Participation> }) => {
+		const name = row.original.user.name;
+		const email = row.original.user.email;
+		const prize = row.original.prize;
+		const priorityNumber = row.original.priorityNumber;
+
+		return (
+			<div>
+				<p>
+					<strong>Nombre:</strong> {name}
+				</p>
+				<p>
+					<strong>Premio:</strong> Cupon de ${prize}
+				</p>
+				<p>
+					<strong>Numero de participacion:</strong> {priorityNumber}
+				</p>
+				<p>
+					<strong>Email:</strong> {email}
+				</p>
+			</div>
+		);
+	};
+
 	return (
 		<>
 			<DataTable
@@ -88,6 +112,8 @@ export default function Participations() {
 				data={participations}
 				isLoading={isLoading}
 				onRefresh={fetchParticipations}
+				getRowCanExpand={() => true}
+				renderSubComponent={renderSubComponent}
 			/>
 		</>
 	);

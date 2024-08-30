@@ -8,6 +8,8 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
+	Row,
+	getExpandedRowModel,
 } from '@tanstack/react-table';
 import {
 	Table,
@@ -17,7 +19,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '../ui/table';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { LoaderCircle, RefreshCw } from 'lucide-react';
 
 import { ScrollArea } from '../ui/scroll-area';
@@ -31,6 +33,8 @@ interface DataTableProps<TData, TValue> {
 	data: TData[];
 	isLoading: boolean;
 	onRefresh: () => Promise<void>;
+	renderSubComponent: (props: { row: Row<TData> }) => React.ReactElement;
+	getRowCanExpand: (row: Row<TData>) => boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +42,8 @@ export function DataTable<TData, TValue>({
 	data,
 	isLoading,
 	onRefresh,
+	renderSubComponent,
+	getRowCanExpand,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([
 		{ id: 'datetime', desc: true },
@@ -52,12 +58,14 @@ export function DataTable<TData, TValue>({
 	const table = useReactTable({
 		data,
 		columns,
+		getRowCanExpand,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		getExpandedRowModel: getExpandedRowModel(),
 		initialState: {
 			pagination: {
 				pageSize: Number(searchParams.get('pageSize')) || 10,
@@ -140,19 +148,25 @@ export function DataTable<TData, TValue>({
 							<TableBody>
 								{table.getRowModel().rows?.length ? (
 									table.getRowModel().rows.map((row) => (
-										<TableRow
-											key={row.id}
-											data-state={row.getIsSelected() && 'selected'}
-										>
-											{row.getVisibleCells().map((cell) => (
-												<TableCell key={cell.id}>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
-												</TableCell>
-											))}
-										</TableRow>
+										<Fragment key={row.id}>
+											<TableRow data-state={row.getIsSelected() && 'selected'}>
+												{row.getVisibleCells().map((cell) => (
+													<TableCell key={cell.id}>
+														{flexRender(
+															cell.column.columnDef.cell,
+															cell.getContext(),
+														)}
+													</TableCell>
+												))}
+											</TableRow>
+											{row.getIsExpanded() && (
+												<TableRow>
+													<TableCell colSpan={columns.length}>
+														{renderSubComponent({ row })}
+													</TableCell>
+												</TableRow>
+											)}
+										</Fragment>
 									))
 								) : (
 									<TableRow>
